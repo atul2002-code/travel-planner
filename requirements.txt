@@ -1,4 +1,4 @@
 streamlit
 xhtml2pdf
-reportlab>=3.5.53,<4
+reportlab
 python-dotenv
