@@ -1,11 +1,9 @@
 import os
 import streamlit as st
-from xhtml2pdf import pisa
 from datetime import datetime
 
 # --- COMPREHENSIVE INDIAN CITIES DATABASE ---
 INDIAN_CITIES_DATA = {
-    # Major Metropolitan Cities
     "mumbai": {
         "historical": ["Gateway of India", "Chhatrapati Shivaji Maharaj Terminus", "Elephanta Caves", "Haji Ali Dargah", "Kanheri Caves"],
         "food": ["Leopold Cafe", "Bademiya", "Cafe Madras", "Trishna", "Britannia & Co."],
@@ -54,8 +52,6 @@ INDIAN_CITIES_DATA = {
         "transport": "Kolkata Metro, Trams, Buses",
         "specialty": "City of Joy, Cultural Hub"
     },
-
-    # Maharashtra Cities
     "pune": {
         "historical": ["Shaniwar Wada", "Aga Khan Palace", "Sinhagad Fort", "Raja Dinkar Kelkar Museum", "Dagdusheth Halwai Temple"],
         "food": ["Cafe Goodluck", "Badshahi Biryani", "Kayani Bakery", "Bedekar Misal", "Vaishali"],
@@ -80,24 +76,14 @@ INDIAN_CITIES_DATA = {
         "transport": "Nashik City Buses, Auto-rickshaws",
         "specialty": "Wine Capital, Kumbh Mela"
     },
-    "aurangabad": {
-        "historical": ["Ajanta Caves", "Ellora Caves", "Bibi Ka Maqbara", "Daulatabad Fort", "Grishneshwar Temple"],
-        "food": ["Bhoj", "Green Leaf", "Tandoor", "Madhur Cafe", "Sankalp"],
-        "hotels": ["Lemon Tree", "Vivanta Aurangabad", "Rama International", "WelcomHotel", "Atithi Gruh"],
-        "markets": ["Gulmandi", "Juna Bazar", "Shahgunj", "City Chowk", "Kannad Road"],
-        "transport": "Aurangabad City Buses, Auto-rickshaws",
-        "specialty": "Tourism Hub, Historical Caves"
+    "jaipur": {
+        "historical": ["Hawa Mahal", "Amber Fort", "City Palace", "Jantar Mantar", "Nahargarh Fort"],
+        "food": ["Laxmi Mishthan Bhandar", "Rawla", "Natraj", "Handi", "Chokhi Dhani"],
+        "hotels": ["Rambagh Palace", "Fairmont Jaipur", "JW Marriott", "Holiday Inn", "Trident"],
+        "markets": ["Johari Bazar", "Bapu Bazar", "Tripolia Bazar", "Chandpole Bazar", "MI Road"],
+        "transport": "Jaipur Metro, City Buses, Auto-rickshaws",
+        "specialty": "Pink City, Royal Heritage"
     },
-    "kolhapur": {
-        "historical": ["Mahalaxmi Temple", "New Palace", "Rankala Lake", "Jyotiba Temple", "Panhala Fort"],
-        "food": ["Hotel Opal", "Purohit", "Khasbag", "Prasad", "Mahesh Lunch Home"],
-        "hotels": ["Sayaji Hotel", "The Pavilion", "Hotel Pearl", "Yatri Nivas", "Hotel Tourist"],
-        "markets": ["Mahadwar Road", "Dasara Chowk", "Shivaji Peth", "Foujdar Chawk", "Station Road"],
-        "transport": "Kolhapur Municipal Buses, Auto-rickshaws",
-        "specialty": "Jaggery, Kolhapuri Chappal, Wrestling"
-    },
-
-    # Gujarat Cities
     "ahmedabad": {
         "historical": ["Sabarmati Ashram", "Sidi Saiyyed Mosque", "Adalaj Stepwell", "Kankaria Lake", "Auto World Museum"],
         "food": ["Gordhan Thal", "Agashiye", "Havmor", "Das Khaman", "Swati Snacks"],
@@ -114,23 +100,13 @@ INDIAN_CITIES_DATA = {
         "transport": "City Bus, Auto-rickshaws",
         "specialty": "Diamond City, Textile Hub"
     },
-    "vadodara": {
-        "historical": ["Laxmi Vilas Palace", "Sayaji Baug", "EME Temple", "Baroda Museum", "Kirti Mandir"],
-        "food": ["Mandy's", "Surya Palace", "Toran", "Jassi de Parathe", "Kansar"],
-        "hotels": ["WelcomHotel", "Surya Palace", "Express Inn", "Ibis", "Gateway Hotel"],
-        "markets": ["Mandal", "Raopura", "Khanderao Market", "Dandia Bazar", "Akota"],
-        "transport": "Vadodara City Buses, Auto-rickshaws",
-        "specialty": "Cultural Capital, Education Hub"
-    },
-
-    # South Indian Cities
-    "coimbatore": {
-        "historical": ["Marudamalai Temple", "Perur Temple", "VOC Park", "Gedee Car Museum", "Black Thunder"],
-        "food": ["Annapoorna", "Aryaas", "Shree Krishna", "Abirami", "Sree Annapoorna"],
-        "hotels": ["Vivanta Coimbatore", "Le Meridien", "Radisson Blu", "The Residency", "Aloft"],
-        "markets": ["Gandhipuram", "Cross Cut Road", "Oppanakara Street", "RS Puram", "Town Hall"],
-        "transport": "Coimbatore City Buses, Auto-rickshaws",
-        "specialty": "Manchester of South India, Engineering Hub"
+    "jalgaon": {
+        "historical": ["Gandhi Teerth", "Patnadevi Temple", "Jain Temple", "Swami Samarth Temple", "Gajanan Maharaj Temple"],
+        "food": ["Hotel Samrat", "Shree Krishna Bhojanalay", "Khandesh Bhojanalay", "Garden View Restaurant", "Madhur Cafe"],
+        "hotels": ["Hotel Aura", "Hotel Plaza", "Hotel Heritage", "Shree Krishna", "Yash Palace"],
+        "markets": ["Jalgaon Cloth Market", "Gandhi Market", "Station Road Market", "Navpada", "M.J. Road"],
+        "transport": "MSRTC Buses, Auto-rickshaws",
+        "specialty": "Banana City, Gold Market"
     },
     "kochi": {
         "historical": ["Fort Kochi", "Chinese Fishing Nets", "Mattancherry Palace", "Jewish Synagogue", "St. Francis Church"],
@@ -140,16 +116,6 @@ INDIAN_CITIES_DATA = {
         "transport": "Kochi Metro, City Buses, Ferries",
         "specialty": "Queen of Arabian Sea, Port City"
     },
-
-    # North Indian Cities
-    "jaipur": {
-        "historical": ["Hawa Mahal", "Amber Fort", "City Palace", "Jantar Mantar", "Nahargarh Fort"],
-        "food": ["Laxmi Mishthan Bhandar", "Rawla", "Natraj", "Handi", "Chokhi Dhani"],
-        "hotels": ["Rambagh Palace", "Fairmont Jaipur", "JW Marriott", "Holiday Inn", "Trident"],
-        "markets": ["Johari Bazar", "Bapu Bazar", "Tripolia Bazar", "Chandpole Bazar", "MI Road"],
-        "transport": "Jaipur Metro, City Buses, Auto-rickshaws",
-        "specialty": "Pink City, Royal Heritage"
-    },
     "lucknow": {
         "historical": ["Bara Imambara", "Chota Imambara", "Rumi Darwaza", "British Residency", "Ambedkar Park"],
         "food": ["Tunday Kababi", "Dastarkhwan", "Royal Cafe", "Nawab's", "Ratti Lal's"],
@@ -158,40 +124,6 @@ INDIAN_CITIES_DATA = {
         "transport": "Lucknow Metro, City Buses, Auto-rickshaws",
         "specialty": "City of Nawabs, Kebabs"
     },
-
-    # Small Cities & Tier 2/3 Cities
-    "jalgaon": {
-        "historical": ["Gandhi Teerth", "Patnadevi Temple", "Jain Temple", "Swami Samarth Temple", "Gajanan Maharaj Temple"],
-        "food": ["Hotel Samrat", "Shree Krishna Bhojanalay", "Khandesh Bhojanalay", "Garden View Restaurant", "Madhur Cafe"],
-        "hotels": ["Hotel Aura", "Hotel Plaza", "Hotel Heritage", "Shree Krishna", "Yash Palace"],
-        "markets": ["Jalgaon Cloth Market", "Gandhi Market", "Station Road Market", "Navpada", "M.J. Road"],
-        "transport": "MSRTC Buses, Auto-rickshaws",
-        "specialty": "Banana City, Gold Market"
-    },
-    "amravati": {
-        "historical": ["Amba Devi Temple", "Chatri Talao", "Baba Farid Park", "Wadali Talao", "Bharat Palace"],
-        "food": ["Hotel Rajwada", "Shiv Sagar", "Gurukripa", "Madhur Milan", "Sai Palace"],
-        "hotels": ["Hotel Rajwada", "Hotel Vrindavan", "Hotel Samrat", "Hotel Sai Palace", "Hotel Shivsagar"],
-        "markets": ["Rajapeth", "Bhogali", "Gandhi Chowk", "Shivaji Nagar", "Shyam Chowk"],
-        "transport": "Amravati Municipal Buses, Auto-rickshaws",
-        "specialty": "Education Hub, Historical City"
-    },
-    "nanded": {
-        "historical": ["Hazur Sahib", "Sachkhand Gurudwara", "Kaleshwar Temple", "Shri Guru Gobind Singh Ji Museum", "Mahanubhav Temple"],
-        "food": ["Gurudwara Langar", "Hotel Samrat", "Shiv Sagar", "Madhur Cafe", "Sai Palace"],
-        "hotels": ["Hotel Samrat", "Hotel Rajwada", "Hotel Sai Palace", "Gurudwara Sarai", "Hotel Shivsagar"],
-        "markets": ["Main Road Market", "Shivaji Nagar", "Gandhi Chowk", "Shyam Chowk", "Jain Bazar"],
-        "transport": "Nanded City Buses, Auto-rickshaws",
-        "specialty": "Sikh Pilgrimage, Historical Significance"
-    },
-    "latur": {
-        "historical": ["Ganj Golai", "Siddheshwar Temple", "Ausa Fort", "Hattikhana", "Surat Shahaji Museum"],
-        "food": ["Hotel Samrat", "Shiv Sagar", "Gurukripa", "Madhur Milan", "Sai Palace"],
-        "hotels": ["Hotel Rajwada", "Hotel Vrindavan", "Hotel Samrat", "Hotel Sai Palace", "Hotel Shivsagar"],
-        "markets": ["Main Road Market", "Gandhi Chowk", "Shivaji Nagar", "Shyam Chowk", "Jain Bazar"],
-        "transport": "Latur City Buses, Auto-rickshaws",
-        "specialty": "Educational Hub, Historical City"
-    }
 }
 
 # --- Initialize session state ---
@@ -205,53 +137,23 @@ if 'budget' not in st.session_state:
     st.session_state.budget = ""
 
 def get_city_data(city_name):
-    """Get exact location data for any Indian city"""
     city_key = city_name.lower().split(',')[0].strip()
-    
     if city_key in INDIAN_CITIES_DATA:
         return INDIAN_CITIES_DATA[city_key]
     else:
-        # For unknown cities, use city name in locations
         city_title = city_name.title()
         return {
-            "historical": [
-                f"{city_title} Fort", 
-                f"{city_title} Museum", 
-                f"Old {city_title} Temple",
-                f"{city_title} Palace",
-                f"{city_title} Historical Monument"
-            ],
-            "food": [
-                f"{city_title} Famous Restaurant",
-                f"{city_title} Local Eatery", 
-                f"{city_title} Sweet Shop",
-                f"{city_title} Bhojanalay",
-                f"{city_title} Cafe"
-            ],
-            "hotels": [
-                f"{city_title} Grand Hotel",
-                f"{city_title} Comfort Inn", 
-                f"{city_title} Budget Stay",
-                f"{city_title} Palace",
-                f"{city_title} Residency"
-            ],
-            "markets": [
-                f"{city_title} Main Market",
-                f"{city_title} Cloth Market", 
-                f"{city_title} Local Bazaar",
-                f"{city_title} Shopping Street",
-                f"{city_title} Commercial Area"
-            ],
+            "historical": [f"{city_title} Fort", f"{city_title} Museum", f"Old {city_title} Temple", f"{city_title} Palace", f"{city_title} Historical Monument"],
+            "food": [f"{city_title} Famous Restaurant", f"{city_title} Local Eatery", f"{city_title} Sweet Shop", f"{city_title} Bhojanalay", f"{city_title} Cafe"],
+            "hotels": [f"{city_title} Grand Hotel", f"{city_title} Comfort Inn", f"{city_title} Budget Stay", f"{city_title} Palace", f"{city_title} Residency"],
+            "markets": [f"{city_title} Main Market", f"{city_title} Cloth Market", f"{city_title} Local Bazaar", f"{city_title} Shopping Street", f"{city_title} Commercial Area"],
             "transport": "Local Buses, Auto-rickshaws, Taxis",
             "specialty": "Local Culture, Historical Significance"
         }
 
 def generate_detailed_plan(destination, budget, trip_duration, travelers, interests):
-    """Generate detailed plan with EXACT location names"""
     city_data = get_city_data(destination)
-    city_key = destination.lower().split(',')[0].strip()
-    
-    # Calculate budget
+
     try:
         total_budget = int(budget)
         accommodation = int(total_budget * 0.4)
@@ -268,36 +170,29 @@ def generate_detailed_plan(destination, budget, trip_duration, travelers, intere
         activities = 1000
         shopping = 500
         buffer = 500
-    
-    # Research Section with EXACT locations
+
     research = f"""
 🌍 **{destination.upper()} TRAVEL RESEARCH REPORT**
 
 **CITY SPECIALTY:** {city_data['specialty']}
 
-**TOP HISTORICAL SITES (EXACT NAMES):**
+**TOP HISTORICAL SITES:**
 """
     for i, site in enumerate(city_data["historical"][:5], 1):
         research += f"• **📍 {site}** - Must-visit historical site #{i}\n"
-    
-    research += f"""
-**SHOPPING (SPECIFIC MARKETS):**
-"""
+
+    research += "\n**SHOPPING (SPECIFIC MARKETS):**\n"
     for i, market in enumerate(city_data["markets"][:4], 1):
         research += f"• **🛍️ {market}** - Popular shopping destination #{i}\n"
-    
-    research += f"""
-**FOOD (EXACT RESTAURANT NAMES):**
-"""
+
+    research += "\n**FOOD (EXACT RESTAURANT NAMES):**\n"
     for i, restaurant in enumerate(city_data["food"][:5], 1):
         research += f"• **🍴 {restaurant}** - Famous for local cuisine #{i}\n"
-    
-    research += f"""
-**ACCOMMODATION (SPECIFIC HOTELS):**
-"""
+
+    research += "\n**ACCOMMODATION (SPECIFIC HOTELS):**\n"
     for i, hotel in enumerate(city_data["hotels"][:4], 1):
         research += f"• **🏨 {hotel}** - Recommended hotel #{i}\n"
-    
+
     research += f"""
 **TRANSPORT:**
 • **🚍 {city_data['transport']}** - Main transport options
@@ -310,7 +205,6 @@ def generate_detailed_plan(destination, budget, trip_duration, travelers, intere
 • Emergency numbers: 100 (Police), 102 (Ambulance)
 """
 
-    # Budget Section
     budget_plan = f"""
 💰 **BUDGET BREAKDOWN FOR {destination.upper()}** - Total: ₹{budget}
 
@@ -330,10 +224,8 @@ def generate_detailed_plan(destination, budget, trip_duration, travelers, intere
 • Visit free attractions and public spaces
 • Bargain politely at local markets
 • Book accommodation 2-3 weeks in advance
-• Travel in groups to share costs
 """
 
-    # Itinerary Section with EXACT locations
     itinerary = f"""
 🗓️ **{trip_duration}-DAY {destination.upper()} ITINERARY**
 
@@ -342,8 +234,6 @@ def generate_detailed_plan(destination, budget, trip_duration, travelers, intere
 **Budget:** ₹{budget}
 
 """
-    
-    # Generate day-wise itinerary with exact locations
     day_plans = [
         {"title": "HISTORICAL & CULTURAL EXPLORATION", "sites": city_data["historical"][:2], "market": city_data["markets"][0], "food": city_data["food"][:2]},
         {"title": "LOCAL MARKETS & TEMPLE TOUR", "sites": city_data["historical"][2:4], "market": city_data["markets"][1], "food": city_data["food"][2:4]},
@@ -351,10 +241,9 @@ def generate_detailed_plan(destination, budget, trip_duration, travelers, intere
         {"title": "LOCAL EXPERIENCES & RELAXATION", "sites": ["Local Park/Garden", "Riverside"], "market": "Local Crafts Market", "food": ["Traditional Dinner"]},
         {"title": "FINAL EXPLORATION & DEPARTURE", "sites": ["Last Minute Sightseeing"], "market": "Souvenir Shopping", "food": ["Farewell Lunch"]}
     ]
-    
+
     for day in range(1, trip_duration + 1):
         plan = day_plans[min(day-1, len(day_plans)-1)]
-        
         itinerary += f"""
 **DAY {day}: {plan['title']}**
 
@@ -368,46 +257,82 @@ def generate_detailed_plan(destination, budget, trip_duration, travelers, intere
 • **🏨 9:30 PM** - Return to **{city_data['hotels'][0]}**
 
 """
-    
+
     return [research, budget_plan, itinerary]
 
-def create_pdf(content, filename):
-    try:
-        with open(filename, "wb") as pdf_file:
-            pisa_status = pisa.CreatePDF(content, dest=pdf_file)
-        return not pisa_status.err
-    except Exception as e:
-        st.error(f"PDF creation error: {str(e)}")
-        return False
+
+def generate_html_report(responses):
+    """Generate a downloadable HTML report instead of PDF"""
+    destination = st.session_state.destination
+    budget = st.session_state.budget
+    travelers = st.session_state.travelers
+    trip_duration = st.session_state.trip_duration
+    interests = st.session_state.interests
+
+    html = f"""<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Travel Plan - {destination.title()}</title>
+<style>
+  body {{ font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; color: #333; }}
+  h1 {{ color: #2c3e50; text-align: center; border-bottom: 3px solid #3498db; padding-bottom: 10px; }}
+  h2 {{ color: #2980b9; margin-top: 30px; }}
+  .info-box {{ background: #f0f8ff; padding: 15px; border-radius: 8px; border-left: 5px solid #3498db; margin: 20px 0; }}
+  .section {{ margin-bottom: 30px; }}
+  p {{ margin: 6px 0; }}
+</style>
+</head>
+<body>
+<h1>🌍 Travel Plan - {destination.title()}</h1>
+<div class="info-box">
+  <p><strong>Destination:</strong> {destination.title()}</p>
+  <p><strong>Budget:</strong> ₹{budget}</p>
+  <p><strong>Travelers:</strong> {travelers}</p>
+  <p><strong>Duration:</strong> {trip_duration} days</p>
+  <p><strong>Interests:</strong> {', '.join(interests)}</p>
+  <p><strong>Generated on:</strong> {datetime.now().strftime("%Y-%m-%d at %H:%M")}</p>
+</div>
+"""
+    section_titles = ["Research Findings", "Budget Breakdown", "Daily Itinerary"]
+    for i, response in enumerate(responses):
+        title = section_titles[i] if i < len(section_titles) else f"Section {i+1}"
+        html += f"<div class='section'><h2>{title}</h2>"
+        for line in str(response).split('\n'):
+            line = line.strip()
+            if line:
+                html += f"<p>{line}</p>"
+        html += "</div>"
+
+    html += """
+<div class="info-box">
+  <p><strong>Note:</strong> This travel plan provides estimated costs and recommendations. Always verify current information before your trip.</p>
+  <p style="text-align:center;color:#888;">Generated with ❤️ by AI Travel Planner</p>
+</div>
+</body></html>"""
+
+    return html
+
 
 def main():
     st.set_page_config(page_title="AI Travel Planner - All India", layout="wide", page_icon="🌍")
-    
     if st.session_state.page == 'input':
         show_input_page()
     elif st.session_state.page == 'output':
         show_output_page()
 
+
 def show_input_page():
-    st.title("🌍 AI Travel Planner ")
-    st.markdown("")
-    
-    # Supported cities list
+    st.title("🌍 AI Travel Planner")
+
     supported_cities = list(INDIAN_CITIES_DATA.keys())
-    major_cities = supported_cities[:8]
-    other_cities = supported_cities[8:]
-    
+
     col1, col2 = st.columns(2)
-    
     with col1:
-        destination = st.text_input("📍 Enter Any Indian City:", 
-                                  placeholder="e.g., Mumbai, Pune, Jalgaon, Nashik, etc.")
-        budget = st.text_input("💰 Enter Budget (INR):", 
-                             placeholder="e.g., 15000", 
-                             value="15000")
-        travelers = st.number_input("👥 Number of Travelers", 
-                                  min_value=1, max_value=20, value=2)
-    
+        destination = st.text_input("📍 Enter Any Indian City:", placeholder="e.g., Mumbai, Pune, Jalgaon, Nashik, etc.")
+        budget = st.text_input("💰 Enter Budget (INR):", placeholder="e.g., 15000", value="15000")
+        travelers = st.number_input("👥 Number of Travelers", min_value=1, max_value=20, value=2)
+
     with col2:
         start_date = st.date_input("📅 Start Date", value=None)
         end_date = st.date_input("📅 End Date", value=None)
@@ -417,31 +342,25 @@ def show_input_page():
             default=["Historical Sites", "Food", "Shopping"]
         )
 
-    # Show supported cities in expander
     with st.expander("📍 **Supported Cities (Click to view)**", expanded=False):
-        st.write("**Major Cities:** " + ", ".join([city.title() for city in major_cities]))
-        st.write("**Other Cities:** " + ", ".join([city.title() for city in other_cities]))
+        st.write("**Cities:** " + ", ".join([city.title() for city in supported_cities]))
         st.write("**➕ Many More!** - Enter any Indian city name")
 
     if st.button("🎯 Generate Travel Plan", type="primary", use_container_width=True):
         if not destination or not budget:
             st.error("⚠️ Please enter both a destination and budget.")
         else:
-            with st.spinner("⏳ Generating your travel plan with EXACT location names..."):
+            with st.spinner("⏳ Generating your travel plan..."):
                 try:
-                    # Calculate trip duration
                     if start_date and end_date:
                         trip_duration = (end_date - start_date).days
                         if trip_duration <= 0:
                             trip_duration = 3
                     else:
                         trip_duration = 3
-                    
-                    # Generate plan with exact locations
-                    responses = generate_detailed_plan(
-                        destination, budget, trip_duration, travelers, interests
-                    )
-                    
+
+                    responses = generate_detailed_plan(destination, budget, trip_duration, travelers, interests)
+
                     st.session_state.responses = responses
                     st.session_state.destination = destination
                     st.session_state.budget = budget
@@ -450,18 +369,18 @@ def show_input_page():
                     st.session_state.interests = interests
                     st.session_state.page = 'output'
                     st.rerun()
-                    
+
                 except Exception as e:
                     st.error(f"Error generating plan: {str(e)}")
 
+
 def show_output_page():
-    st.title("✅ Your Travel Plan with EXACT Locations")
+    st.title("✅ Your Travel Plan")
     st.markdown(f"### **Perfect itinerary for {st.session_state.destination.title()}**")
-    
+
     responses = st.session_state.responses
-    
+
     if responses:
-        # Metrics
         col1, col2, col3, col4 = st.columns(4)
         with col1:
             st.metric("Destination", st.session_state.destination.title())
@@ -471,36 +390,42 @@ def show_output_page():
             st.metric("Travelers", st.session_state.travelers)
         with col4:
             st.metric("Duration", f"{st.session_state.trip_duration} days")
-        
-        # Tabs
+
         tab1, tab2, tab3, tab4 = st.tabs(["📊 Complete Plan", "🔍 Research", "💰 Budget", "🗓️ Itinerary"])
-        
+
         with tab1:
-            display_full_plan(responses)
-        
+            st.subheader("Complete Travel Plan")
+            for i, response in enumerate(responses, 1):
+                with st.expander(f"Section {i}", expanded=i==1):
+                    st.markdown(response)
+
         with tab2:
-            display_research(responses)
-            
+            st.subheader("🔍 Travel Research")
+            st.markdown(responses[0])
+
         with tab3:
-            display_budget(responses)
-            
+            st.subheader("💰 Budget Breakdown")
+            st.markdown(responses[1])
+
         with tab4:
-            display_itinerary(responses)
-        
-        # PDF Download
+            st.subheader("🗓️ Daily Itinerary")
+            st.markdown(responses[2])
+
         st.markdown("---")
         st.subheader("📄 Download Your Travel Plan")
-        
-        if st.button("⬇️ Generate PDF Report", type="primary", use_container_width=True):
-            with st.spinner("Creating PDF..."):
-                pdf_success = generate_pdf_report(responses)
-                if pdf_success:
-                    st.success("✅ PDF generated successfully!")
-                    st.balloons()
-        
-    else:
-        st.error("No responses available. Please generate a new plan.")
-    
+
+        html_content = generate_html_report(responses)
+        filename = f"Travel_Plan_{st.session_state.destination.replace(' ', '_').title()}_{datetime.now().strftime('%Y%m%d')}.html"
+
+        st.download_button(
+            label="⬇️ Download Travel Plan (HTML)",
+            data=html_content,
+            file_name=filename,
+            mime="text/html",
+            use_container_width=True
+        )
+        st.info("💡 After downloading, open the file in your browser to view or print it as PDF!")
+
     st.markdown("---")
     col1, col2 = st.columns(2)
     with col1:
@@ -510,134 +435,8 @@ def show_output_page():
             st.rerun()
     with col2:
         if st.button("📱 Share This Plan", use_container_width=True):
-            st.info("Share this plan by downloading the PDF report above!")
+            st.info("Share this plan by downloading the HTML report above!")
 
-def display_full_plan(responses):
-    st.subheader("Complete Travel Plan Summary")
-    for i, response in enumerate(responses, 1):
-        with st.expander(f"Section {i}: Detailed Analysis", expanded=i==1):
-            st.markdown(response)
-
-def display_research(responses):
-    st.subheader("🔍 Travel Research Findings")
-    st.info("Detailed research with EXACT location names and specific details.")
-    if len(responses) > 0:
-        st.markdown(responses[0])
-
-def display_budget(responses):
-    st.subheader("💰 Budget Breakdown")
-    st.info("Detailed cost analysis with specific examples and money-saving tips.")
-    if len(responses) > 1:
-        st.markdown(responses[1])
-
-def display_itinerary(responses):
-    st.subheader("🗓️ Daily Itinerary")
-    st.info(f"Day-by-day schedule with EXACT location names and specific timings.")
-    if len(responses) > 2:
-        st.markdown(responses[2])
-
-def generate_pdf_report(responses):
-    try:
-        html_content = f"""
-        <html>
-        <head>
-            <style>
-                body {{ font-family: 'Arial', sans-serif; margin: 40px; line-height: 1.6; }}
-                h1 {{ color: #2c3e50; text-align: center; border-bottom: 3px solid #3498db; padding-bottom: 10px; }}
-                h2 {{ color: #34495e; border-bottom: 2px solid #3498db; padding-bottom: 5px; margin-top: 30px; }}
-                h3 {{ color: #2c3e50; margin-top: 25px; }}
-                .section {{ margin-bottom: 30px; }}
-                .point {{ margin: 10px 0; padding-left: 15px; }}
-                .info-box {{ background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 5px solid #3498db; }}
-                .location {{ color: #e74c3c; font-weight: bold; }}
-                .highlight {{ background-color: #fff3cd; padding: 15px; border-radius: 5px; margin: 20px 0; }}
-                .itinerary-day {{ background-color: #e8f4fd; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 4px solid #2980b9; }}
-                @media print {{
-                    body {{ margin: 20px; }}
-                    .no-print {{ display: none; }}
-                }}
-            </style>
-        </head>
-        <body>
-            <h1>🌍 AI Travel Plan - {st.session_state.destination.title()}</h1>
-            <div class="info-box">
-                <h2>Trip Overview</h2>
-                <div class="point"><strong>• Destination:</strong> {st.session_state.destination.title()}</div>
-                <div class="point"><strong>• Budget:</strong> ₹{st.session_state.budget}</div>
-                <div class="point"><strong>• Travelers:</strong> {st.session_state.travelers}</div>
-                <div class="point"><strong>• Duration:</strong> {st.session_state.trip_duration} days</div>
-                <div class="point"><strong>• Interests:</strong> {', '.join(st.session_state.interests)}</div>
-                <div class="point"><strong>• Generated on:</strong> {datetime.now().strftime("%Y-%m-%d at %H:%M")}</div>
-            </div>
-        """
-        
-        section_titles = ["Research Findings", "Budget Breakdown", "Detailed Itinerary"]
-        
-        for i, response in enumerate(responses):
-            if i < len(section_titles):
-                html_content += f'<h2>{section_titles[i]}</h2>'
-            else:
-                html_content += f'<h2>Section {i+1}</h2>'
-            
-            lines = str(response).split('\n')
-            for line in lines:
-                if line.strip():
-                    if any(marker in line for marker in ['📍', '🍴', '🏨', '🛍️', '🚍']):
-                        html_content += f'<div class="point"><span class="location">{line.strip()}</span></div>'
-                    elif line.strip().startswith('**DAY'):
-                        html_content += f'<div class="itinerary-day"><strong>{line.strip()}</strong></div>'
-                    elif line.strip().startswith(('•', '-', '*')):
-                        html_content += f'<div class="point">{line.strip()}</div>'
-                    elif line.strip().startswith('🌍') or line.strip().startswith('💰') or line.strip().startswith('🗓️'):
-                        html_content += f'<h3>{line.strip()}</h3>'
-                    elif len(line.strip()) > 10:
-                        html_content += f'<p>{line.strip()}</p>'
-                    else:
-                        html_content += f'<div class="point">• {line.strip()}</div>'
-        
-        # Add footer
-        html_content += """
-            <div class="highlight no-print">
-                <h2>💡 Important Travel Tips</h2>
-                <div class="point">• Carry original ID proof and copies</div>
-                <div class="point">• Keep emergency contacts handy</div>
-                <div class="point">• Check weather forecast before travel</div>
-                <div class="point">• Respect local customs and traditions</div>
-                <div class="point">• Stay hydrated and carry essential medicines</div>
-                <div class="point">• Keep digital and physical copies of documents</div>
-            </div>
-            
-            <div class="info-box">
-                <p><strong>Note:</strong> This AI-generated travel plan provides estimated costs and recommendations. 
-                Actual prices, timings, and availability may vary. Always verify current information before your trip.</p>
-                <p style="text-align: center; margin-top: 20px; color: #7f8c8d;">
-                    Generated with ❤️ by AI Travel Planner | {datetime.now().strftime("%Y")}
-                </p>
-            </div>
-        </body>
-        </html>
-        """
-        
-        pdf_filename = f"Travel_Plan_{st.session_state.destination.replace(' ', '_').title()}_{datetime.now().strftime('%Y%m%d')}.pdf"
-        success = create_pdf(html_content, pdf_filename)
-        
-        if success:
-            with open(pdf_filename, "rb") as f:
-                pdf_data = f.read()
-            
-            st.download_button(
-                label="📥 Download PDF Report",
-                data=pdf_data,
-                file_name=pdf_filename,
-                mime="application/pdf",
-                use_container_width=True
-            )
-            return True
-        return False
-        
-    except Exception as e:
-        st.error(f"Error generating PDF: {str(e)}")
-        return False
 
 if __name__ == "__main__":
     main()
